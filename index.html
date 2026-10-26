@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>우리동네 돌봄 히어로 | 우리 동네에서, 원하는 시간만큼</title>
+<meta name="description" content="집 근처에서 주 2~3일, 하루 3~4시간. 월 최저시급 보장제로 안심하고 시작하는 돌봄 활동. 지금 앱을 받아보세요.">
+<!-- 공유 미리보기 (이미지 경로는 실제 에셋으로 교체) -->
+<meta property="og:title" content="우리 동네에서, 내가 원하는 시간만큼 | 우리동네 돌봄 히어로">
+<meta property="og:description" content="주 2~3일, 하루 3~4시간 단시간 활동 + 월 최저시급 보장제">
+<meta property="og:image" content="https://example.com/og-image.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<!-- Amplitude Browser SDK (Project ID: 180840) -->
+<script src="https://cdn.jsdelivr.net/npm/@amplitude/analytics-browser@2.48.1/lib/scripts/amplitude-min.umd.js"></script>
+<style>
+  :root{
+    --green-900:#0f3b2e; --green-700:#16624a; --green-500:#1f8a63; --green-100:#e6f4ed; --green-50:#f3faf6;
+    --coral:#ff6b4a; --coral-dark:#e8532f; --coral-50:#fff1ec;
+    --ink:#1b1f1d; --ink-2:#4a524e; --ink-3:#7c8580; --line:#e6ebe8; --bg:#ffffff; --bg-2:#f7f8f6;
+    --radius:20px; --shadow:0 10px 30px rgba(15,59,46,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.6;word-break:keep-all;-webkit-font-smoothing:antialiased;
+       padding-bottom:84px}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:700;color:var(--green-700);background:var(--green-100);
+           padding:6px 12px;border-radius:999px;margin-bottom:14px}
+  h2.sec-title{font-size:clamp(24px,5.4vw,34px);line-height:1.35;font-weight:800;letter-spacing:-.02em}
+  .sec-sub{color:var(--ink-2);margin-top:10px;font-size:16px}
+  section{padding:72px 0}
+
+  /* 버튼 */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:17px;
+       border-radius:14px;padding:16px 24px;cursor:pointer;border:0;transition:transform .15s,background .15s}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--coral);color:#fff;box-shadow:0 8px 20px rgba(255,107,74,.35)}
+  .btn-primary:hover{background:var(--coral-dark)}
+  .btn-ghost{background:#fff;color:var(--green-900);border:1.5px solid var(--line)}
+  .btn-block{width:100%}
+
+  /* 헤더 */
+  header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;color:var(--green-900)}
+  .logo-mark{width:30px;height:30px;border-radius:9px;background:var(--green-500);display:grid;place-items:center;color:#fff;font-size:16px}
+  header .btn{padding:9px 14px;font-size:14px;border-radius:10px;box-shadow:none}
+
+  /* 히어로 */
+  .hero{background:linear-gradient(180deg,var(--green-50) 0%,#fff 100%);padding:44px 0 64px}
+  .hero .wrap{display:grid;gap:36px}
+  .hero h1{font-size:clamp(30px,7.6vw,52px);line-height:1.25;font-weight:900;letter-spacing:-.03em;color:var(--green-900)}
+  .hero h1 em{font-style:normal;color:var(--coral)}
+  .hero p.lead{font-size:17px;color:var(--ink-2);margin-top:16px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .chip{font-size:14px;font-weight:700;background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:999px}
+  .chip b{color:var(--green-500)}
+  .hero-cta{margin-top:28px;display:grid;gap:10px;max-width:420px}
+  .hero-note{font-size:13px;color:var(--ink-3)}
+
+  /* 히어로 카드(주간 일정 예시) */
+  .week-card{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:22px;max-width:440px;width:100%;justify-self:center}
+  .week-card h3{font-size:15px;color:var(--ink-2);font-weight:700}
+  .week-card .big{font-size:22px;font-weight:800;margin:4px 0 16px}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .day{text-align:center;font-size:12px;color:var(--ink-3)}
+  .slot{height:64px;border-radius:10px;background:var(--bg-2);margin-top:6px;position:relative}
+  .slot.on{background:var(--green-500)}
+  .slot.on::after{content:"3~4h";position:absolute;inset:auto 0 6px;color:#fff;font-size:10px;font-weight:700}
+  .pin{display:flex;align-items:center;gap:10px;margin-top:16px;padding:12px;border-radius:12px;background:var(--coral-50);font-size:14px;font-weight:600}
+
+  /* 혜택 */
+  .benefits{display:grid;gap:16px;margin-top:36px}
+  .benefit{background:var(--bg-2);border-radius:var(--radius);padding:26px}
+  .benefit .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:#fff;margin-bottom:16px}
+  .benefit h3{font-size:20px;font-weight:800}
+  .benefit p{color:var(--ink-2);margin-top:6px}
+  .benefit .tag{display:inline-block;margin-top:14px;font-size:13px;font-weight:700;color:var(--green-700)}
+
+  /* 일정/수입 시뮬레이터 */
+  .sim{background:var(--green-900);color:#fff}
+  .sim .eyebrow{background:rgba(255,255,255,.12);color:#bfe8d4}
+  .sim .sec-sub{color:#bcd3c8}
+  .sim-box{margin-top:32px;background:#fff;color:var(--ink);border-radius:24px;padding:24px;display:grid;gap:24px}
+  .sim-label{font-weight:800;font-size:15px;margin-bottom:10px}
+  .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .seg button{font:inherit;font-weight:700;font-size:15px;padding:12px 0;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer}
+  .seg button[aria-pressed="true"]{border-color:var(--green-500);background:var(--green-100);color:var(--green-900)}
+  .result{background:var(--green-50);border-radius:16px;padding:20px;text-align:center}
+  .result small{color:var(--ink-2);font-weight:600}
+  .result .amount{font-size:clamp(30px,8vw,40px);font-weight:900;color:var(--green-700);letter-spacing:-.02em}
+  .result .meta{font-size:14px;color:var(--ink-2)}
+  .disclaimer{font-size:12px;color:var(--ink-3);text-align:left}
+
+  /* 최저시급 보장제 */
+  .guarantee{display:grid;gap:28px;align-items:center}
+  .g-visual{background:var(--coral-50);border-radius:24px;padding:28px}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:14px;font-weight:700}
+  .bar-row span:first-child{width:72px;flex:none;color:var(--ink-2)}
+  .bar{height:30px;border-radius:8px;background:#ffd2c5;position:relative;flex:1}
+  .bar i{position:absolute;inset:0 auto 0 0;border-radius:8px;background:var(--coral)}
+  .bar.fill i{background:var(--green-500)}
+  .g-line{border-top:2px dashed var(--coral);margin:8px 0 6px;position:relative}
+  .g-line b{position:absolute;right:0;top:-24px;font-size:12px;color:var(--coral-dark)}
+  .g-list{list-style:none;display:grid;gap:14px;margin-top:22px}
+  .g-list li{display:flex;gap:12px}
+  .g-list li::before{content:"✓";flex:none;width:24px;height:24px;border-radius:50%;background:var(--green-500);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;margin-top:2px}
+
+  /* 이런 분께 */
+  .bg-soft{background:var(--bg-2)}
+  .persona{display:grid;gap:12px;margin-top:32px}
+  .p-card{background:#fff;border-radius:18px;padding:20px;display:flex;gap:16px;align-items:flex-start}
+  .p-card .emoji{font-size:30px;line-height:1}
+  .p-card h3{font-size:17px;font-weight:800}
+  .p-card p{font-size:15px;color:var(--ink-2);margin-top:2px}
+
+  /* 단계 */
+  .steps{display:grid;gap:14px;margin-top:32px;counter-reset:s}
+  .step{border:1.5px solid var(--line);border-radius:18px;padding:22px 22px 22px 74px;position:relative}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;left:22px;top:22px;width:36px;height:36px;border-radius:50%;
+                background:var(--green-900);color:#fff;font-weight:800;display:grid;place-items:center}
+  .step h3{font-size:17px;font-weight:800}
+  .step p{color:var(--ink-2);font-size:15px}
+
+  /* 다시 오신 분 */
+  .comeback{background:linear-gradient(135deg,var(--coral) 0%,#ff8a5c 100%);color:#fff;border-radius:28px;padding:32px 26px}
+  .comeback h2{font-size:clamp(22px,5vw,30px);font-weight:900;line-height:1.35}
+  .comeback p{margin-top:10px;opacity:.95}
+  .comeback ul{list-style:none;margin-top:18px;display:grid;gap:8px;font-weight:700}
+  .comeback li::before{content:"→ "}
+  .comeback .btn{margin-top:22px;background:#fff;color:var(--coral-dark)}
+
+  /* FAQ */
+  .faq{margin-top:28px;display:grid;gap:10px}
+  details{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:#fff}
+  summary{font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:20px;color:var(--green-500);line-height:1}
+  details[open] summary::after{content:"−"}
+  details p{color:var(--ink-2);margin-top:10px;font-size:15px}
+
+  /* 마지막 CTA */
+  .final{background:var(--green-900);color:#fff;text-align:center}
+  .final h2{font-size:clamp(26px,6vw,38px);font-weight:900;line-height:1.3}
+  .final p{color:#bcd3c8;margin-top:12px}
+  .stores{display:grid;gap:10px;max-width:420px;margin:28px auto 0}
+  .store-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#000;color:#fff;border-radius:14px;padding:14px;font-weight:700}
+  .store-btn small{display:block;font-size:11px;font-weight:500;opacity:.7;text-align:left;line-height:1.2}
+
+  footer{padding:28px 0 36px;font-size:12px;color:var(--ink-3);background:var(--bg-2)}
+  footer p+p{margin-top:6px}
+
+  /* 하단 고정 CTA (모바일) */
+  .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);
+              padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;gap:12px;align-items:center;
+              transform:translateY(110%);transition:transform .25s}
+  .sticky-cta.show{transform:none}
+  .sticky-cta .txt{font-size:13px;line-height:1.35;flex:1;color:var(--ink-2)}
+  .sticky-cta .txt b{color:var(--ink);font-size:14px}
+  .sticky-cta .btn{padding:13px 18px;font-size:15px}
+
+  /* 등장 애니메이션 */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+  @media (min-width:860px){
+    body{padding-bottom:0}
+    .sticky-cta{display:none}
+    .hero{padding:72px 0 88px}
+    .hero .wrap{grid-template-columns:1.1fr .9fr;align-items:center}
+    .benefits{grid-template-columns:repeat(3,1fr)}
+    .sim-box{grid-template-columns:1fr 1fr;padding:36px;align-items:center}
+    .guarantee{grid-template-columns:1fr 1fr;gap:56px}
+    .persona{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:repeat(3,1fr)}
+    .comeback{padding:48px;display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:center}
+    .stores{grid-template-columns:1fr 1fr;max-width:480px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ① 헤더 -->
+<header>
+  <div class="wrap">
+    <a href="#top" class="logo"><span class="logo-mark">♥</span>우리동네 돌봄 히어로</a>
+    <a href="#download" class="btn btn-primary js-download" data-cta="header">앱 받기</a>
+  </div>
+</header>
+
+<!-- ② 히어로 -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">동네 돌봄 활동, 지금 시작해요</span>
+      <h1>우리 동네에서,<br><em>내가 원하는 시간만큼</em><br>일해요</h1>
+      <p class="lead">출퇴근 걱정 없이 집 근처에서.<br>주 2~3일, 하루 3~4시간만 해도 괜찮아요.</p>
+      <div class="chips">
+        <span class="chip">📍 <b>집 근처</b> 활동</span>
+        <span class="chip">⏰ <b>단시간</b> 선택</span>
+        <span class="chip">💰 <b>월 최저시급</b> 보장</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#download" class="btn btn-primary btn-block js-download" data-cta="hero">무료로 앱 받고 시작하기</a>
+        <span class="hero-note">가입비 없음 · 원하는 날짜와 시간만 골라서 활동</span>
+      </div>
+    </div>
+
+    <div class="week-card reveal" aria-label="주간 활동 일정 예시">
+      <h3>이번 주 내 일정 (예시)</h3>
+      <div class="big">주 3일 · 하루 3~4시간</div>
+      <div class="week">
+        <div class="day">월<div class="slot on"></div></div>
+        <div class="day">화<div class="slot"></div></div>
+        <div class="day">수<div class="slot on"></div></div>
+        <div class="day">목<div class="slot"></div></div>
+        <div class="day">금<div class="slot on"></div></div>
+        <div class="day">토<div class="slot"></div></div>
+        <div class="day">일<div class="slot"></div></div>
+      </div>
+      <div class="pin">📍 우리 집에서 가까운 돌봄만 골라서 매칭</div>
+    </div>
+  </div>
+</section>
+
+<!-- ③ 핵심 혜택 3가지 -->
+<section id="benefits">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">왜 돌봄 히어로일까요?</span>
+      <h2 class="sec-title">생활은 그대로,<br>수입은 더하고</h2>
+    </div>
+    <div class="benefits">
+      <article class="benefit reveal">
+        <div class="ico">📍</div>
+        <h3>동네 인근에서 활동</h3>
+        <p>멀리 갈 필요 없어요. 우리 집 근처의 돌봄 요청만 골라 받을 수 있어요.</p>
+        <span class="tag">이동 시간 ↓ 여유 시간 ↑</span>
+      </article>
+      <article class="benefit reveal">
+        <div class="ico">⏰</div>
+        <h3>원하는 시간대에 유연하게</h3>
+        <p>주 2~3일, 하루 3~4시간처럼 내 일정에 맞춘 단시간 활동이 가능해요.</p>
+        <span class="tag">아이 등원 후 · 오후 시간 · 주말</span>
+      </article>
+      <article class="benefit reveal">
+        <div class="ico">💰</div>
+        <h3>든든한 경제적 수익</h3>
+        <p>월 최저시급 보장제로 활동 초기에도 수입 걱정을 덜 수 있어요.</p>
+        <span class="tag">처음이어도 안심</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ④ 내 일정 시뮬레이터 -->
+<section class="sim" id="simulator">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">내 일정으로 계산해보기</span>
+      <h2 class="sec-title">이 정도만 활동해도<br>한 달이면 이만큼</h2>
+      <p class="sec-sub">일주일에 며칠, 하루 몇 시간 할 수 있는지 골라보세요.</p>
+    </div>
+    <div class="sim-box reveal">
+      <div>
+        <div class="sim-label">일주일에</div>
+        <div class="seg" id="segDays" role="group" aria-label="주당 활동일">
+          <button type="button" data-v="2">2일</button>
+          <button type="button" data-v="3" aria-pressed="true">3일</button>
+          <button type="button" data-v="4">4일</button>
+          <button type="button" data-v="5">5일</button>
+        </div>
+        <div class="sim-label" style="margin-top:20px">하루에</div>
+        <div class="seg" id="segHours" role="group" aria-label="하루 활동시간">
+          <button type="button" data-v="2">2시간</button>
+          <button type="button" data-v="3">3시간</button>
+          <button type="button" data-v="4" aria-pressed="true">4시간</button>
+          <button type="button" data-v="5">5시간</button>
+        </div>
+      </div>
+      <div>
+        <div class="result" aria-live="polite">
+          <small>예상 월 수입 (예시)</small>
+          <div class="amount" id="amount">0원</div>
+          <div class="meta" id="meta">월 약 0시간 활동</div>
+        </div>
+        <p class="disclaimer" style="margin-top:12px">
+          * 시급 <span id="wageText"></span> 기준, 한 달 4.3주로 계산한 예시입니다. 실제 수입은 매칭된 돌봄 유형·시간·지역에 따라 달라질 수 있어요.
+        </p>
+        <a href="#download" class="btn btn-primary btn-block js-download" data-cta="simulator" style="margin-top:16px">이 일정으로 시작하기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ 월 최저시급 보장제 -->
+<section id="guarantee">
+  <div class="wrap guarantee">
+    <div class="reveal">
+      <span class="eyebrow">월 최저시급 보장제</span>
+      <h2 class="sec-title">매칭이 적은 달에도<br>수입은 지켜드려요</h2>
+      <p class="sec-sub">처음 시작할 때 가장 걱정되는 건 "일이 안 들어오면 어쩌지?"예요. 그래서 돌봄 히어로가 최소 수입을 보장해요.</p>
+      <ul class="g-list">
+        <li><div><b>활동 가능 시간만 등록하면</b><br><span style="color:var(--ink-2)">등록한 시간 기준으로 월 최저시급 수준을 보장해요.</span></div></li>
+        <li><div><b>부족한 금액은 돌봄 히어로가 채워요</b><br><span style="color:var(--ink-2)">실제 활동 수입이 기준에 못 미치면 차액을 지급해요.</span></div></li>
+        <li><div><b>신규·복귀 히어로 모두 대상</b><br><span style="color:var(--ink-2)">처음이거나 오랜만에 돌아와도 똑같이 적용돼요.</span></div></li>
+      </ul>
+      <p class="disclaimer" style="margin-top:16px">* 보장 기준·대상·기간 등 세부 조건은 앱 내 안내를 확인해 주세요.</p>
+    </div>
+    <div class="g-visual reveal" aria-label="최저시급 보장 원리 그래프">
+      <div style="font-weight:800;margin-bottom:20px">이렇게 보장돼요</div>
+      <div class="g-line"><b>보장 기준선</b></div>
+      <div class="bar-row"><span>매칭 많은 달</span><div class="bar"><i style="width:100%;background:var(--green-500)"></i></div></div>
+      <div class="bar-row"><span>매칭 적은 달</span><div class="bar"><i style="width:62%"></i></div></div>
+      <div class="bar-row"><span>보장 적용 후</span><div class="bar fill"><i style="width:100%"></i></div></div>
+      <p style="font-size:14px;color:var(--ink-2);margin-top:16px">
+        <span style="color:var(--coral-dark);font-weight:800">■</span> 실제 활동 수입 &nbsp;
+        <span style="color:var(--green-500);font-weight:800">■</span> 보장 적용 수입
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ 이런 분께 추천 -->
+<section class="bg-soft" id="for-you">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">이런 분들이 시작해요</span>
+      <h2 class="sec-title">하루 몇 시간,<br>나에게 맞는 돌봄 활동</h2>
+    </div>
+    <div class="persona">
+      <div class="p-card reveal"><div class="emoji">👩‍👧</div><div><h3>아이 등원 후 오전이 비는 분</h3><p>등원부터 하원 전까지, 동네에서 3~4시간만.</p></div></div>
+      <div class="p-card reveal"><div class="emoji">🧑‍💼</div><div><h3>본업 외 부수입이 필요한 분</h3><p>주말이나 퇴근 후 시간대만 골라서.</p></div></div>
+      <div class="p-card reveal"><div class="emoji">👵</div><div><h3>경험을 살려 다시 일하고 싶은 분</h3><p>육아·돌봄 경험이 있다면 더 반가워요.</p></div></div>
+      <div class="p-card reveal"><div class="emoji">🎓</div><div><h3>수업 사이 시간을 활용하고 싶은 분</h3><p>공강 시간, 방학 기간에 유연하게.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ 시작 3단계 -->
+<section id="how">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">시작은 간단해요</span>
+      <h2 class="sec-title">3단계면 첫 활동까지</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><h3>앱 다운로드 & 가입</h3><p>휴대폰 번호만 있으면 바로 가입할 수 있어요.</p></div>
+      <div class="step reveal"><h3>동네와 가능한 시간 등록</h3><p>활동 지역과 요일·시간대를 내 마음대로 설정해요.</p></div>
+      <div class="step reveal"><h3>가까운 돌봄 매칭 시작</h3><p>조건에 맞는 요청이 오면 확인하고 활동해요.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ 복귀 고객 전용 -->
+<section style="padding-top:0" id="comeback">
+  <div class="wrap">
+    <div class="comeback reveal">
+      <div>
+        <h2>오랜만이에요!<br>1년 전과 많이 달라졌어요</h2>
+        <p>예전에 써보셨다면, 지금 다시 시작하기 좋은 때예요.</p>
+        <ul>
+          <li>단시간 활동 선택이 더 자유로워졌어요</li>
+          <li>동네 기반 매칭으로 이동 부담을 줄였어요</li>
+          <li>월 최저시급 보장제가 생겼어요</li>
+        </ul>
+      </div>
+      <div>
+        <a href="#download" class="btn btn-block js-download" data-cta="comeback">기존 계정으로 다시 시작하기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑨ FAQ -->
+<section class="bg-soft" id="faq">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">자주 묻는 질문</span>
+      <h2 class="sec-title">궁금한 점, 미리 알려드려요</h2>
+    </div>
+    <div class="faq">
+      <details><summary>돌봄 경험이나 자격증이 없어도 되나요?</summary><p>필수 교육을 이수하면 시작할 수 있어요. 자격증이나 경험이 있으면 매칭에 더 유리해요. (세부 기준은 앱에서 확인)</p></details>
+      <details><summary>정말 주 2~3일, 하루 몇 시간만 해도 되나요?</summary><p>네. 가능한 요일과 시간대를 직접 등록하고, 그 안에서만 매칭을 받아요. 일정은 언제든 바꿀 수 있어요.</p></details>
+      <details><summary>월 최저시급 보장은 어떻게 받나요?</summary><p>등록한 활동 가능 시간을 기준으로 실제 수입이 보장 기준에 못 미치면 차액이 지급돼요. 대상·기간 등 세부 조건은 앱 내 안내를 확인해 주세요.</p></details>
+      <details><summary>예전에 가입했는데 다시 쓸 수 있나요?</summary><p>물론이에요. 앱을 설치하고 기존 계정으로 로그인하면 바로 다시 시작할 수 있어요.</p></details>
+      <details><summary>활동 지역은 어떻게 정하나요?</summary><p>집 주소를 기준으로 활동 반경을 설정하면, 그 범위 안의 돌봄 요청만 받아볼 수 있어요.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ⑩ 최종 CTA / 다운로드 -->
+<section class="final" id="download">
+  <div class="wrap reveal">
+    <h2>오늘, 우리 동네의<br>돌봄 히어로가 되어주세요</h2>
+    <p>내 시간에 맞춰, 집 근처에서, 수입은 든든하게.</p>
+    <div class="stores">
+      <a class="store-btn js-store" data-store="ios" href="#">
+        <span style="font-size:24px"></span><span><small>Download on the</small>App Store</span>
+      </a>
+      <a class="store-btn js-store" data-store="android" href="#">
+        <span style="font-size:22px">▶</span><span><small>GET IT ON</small>Google Play</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>우리동네 돌봄 히어로 · 고객센터 0000-0000 · help@example.com</p>
+    <p>* 페이지 내 수입 예시는 이해를 돕기 위한 참고용이며 실제 수입과 다를 수 있습니다. 월 최저시급 보장제의 세부 조건은 앱 내 공지를 따릅니다.</p>
+  </div>
+</footer>
+
+<!-- 하단 고정 CTA (모바일) -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="txt"><b>주 2~3일, 하루 3~4시간</b><br>월 최저시급 보장으로 시작</div>
+  <a href="#download" class="btn btn-primary js-download" data-cta="sticky">앱 받기</a>
+</div>
+
+<script>
+/* ================= 설정값 (운영 시 교체) ================= */
+const CONFIG = {
+  HOURLY_WAGE: 10320,  // 시뮬레이터 기준 시급(원). 실제 정책 금액으로 교체
+  WEEKS_PER_MONTH: 4.3,
+  IOS_URL: "https://apps.apple.com/kr/app/idXXXXXXXXX",            // App Store 링크
+  ANDROID_URL: "https://play.google.com/store/apps/details?id=xxx", // Google Play 링크
+  ONELINK_URL: "",  // 딥링크/원링크(Airbridge, AppsFlyer 등)가 있으면 입력 → 우선 사용
+  // Amplitude: Settings → Projects → (Project ID 180840) → General 의 "API Key" 값을 넣으세요.
+  // Project ID(180840)와는 다른 32자리 문자열입니다. 비어 있으면 Amplitude 전송을 하지 않습니다.
+  AMPLITUDE_API_KEY: ""
+};
+
+/* ---------- Amplitude 초기화 ---------- */
+const AMP_ON = !!(CONFIG.AMPLITUDE_API_KEY && window.amplitude);
+if(AMP_ON){
+  try{
+    amplitude.init(CONFIG.AMPLITUDE_API_KEY, {
+      autocapture: {
+        attribution: true,        // utm_*, gclid, fbclid, referrer 자동 수집
+        pageViews: true,          // 페이지 조회 자동 수집
+        sessions: true,
+        formInteractions: false,
+        fileDownloads: false,
+        elementInteractions: false
+      },
+      serverZone: "US"
+    });
+  }catch(e){}
+}
+/* 스토어로 이동하기 직전에 이벤트가 유실되지 않도록 전송 후 이동 (최대 400ms 대기) */
+function flushThen(fn){
+  let done = false; const go = ()=>{ if(!done){ done = true; fn(); } };
+  if(AMP_ON){ try{ amplitude.flush().promise.then(go, go); }catch(e){ go(); } }
+  setTimeout(go, AMP_ON ? 400 : 0);
+}
+
+/* ---------- UTM 등 광고 파라미터 유지 ---------- */
+const qs = new URLSearchParams(location.search);
+function withParams(url){
+  if(!url) return url;
+  try{
+    const u = new URL(url);
+    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","gclid","fbclid"].forEach(k=>{
+      if(qs.get(k)) u.searchParams.set(k, qs.get(k));
+    });
+    return u.toString();
+  }catch(e){ return url; }
+}
+
+/* ---------- OS 감지 → 스토어 바로 연결 ---------- */
+const ua = navigator.userAgent || "";
+const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+const isAndroid = /Android/i.test(ua);
+function storeUrl(){
+  if(CONFIG.ONELINK_URL) return withParams(CONFIG.ONELINK_URL);
+  if(isIOS) return withParams(CONFIG.IOS_URL);
+  if(isAndroid) return withParams(CONFIG.ANDROID_URL);
+  return null; // PC는 하단 다운로드 섹션으로 스크롤
+}
+
+/* ---------- 이벤트 트래킹 (Amplitude + GA4/GTM 연동 지점) ---------- */
+const OS = isIOS ? "ios" : isAndroid ? "android" : "desktop";
+function track(name, params){
+  params = Object.assign({os: OS}, params || {});
+  try{ if(AMP_ON) amplitude.track(name, params); }catch(e){}
+  try{ window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({event:name}, params)); }catch(e){}
+  try{ if(typeof gtag==="function") gtag("event", name, params); }catch(e){}
+}
+
+document.querySelectorAll(".js-download").forEach(el=>{
+  el.addEventListener("click", e=>{
+    const url = storeUrl();
+    track("cta_click", {cta_position: el.dataset.cta, destination: url ? "store" : "download_section"});
+    if(url){ e.preventDefault(); flushThen(()=>{ location.href = url; }); }
+  });
+});
+document.querySelectorAll(".js-store").forEach(el=>{
+  const url = withParams(el.dataset.store==="ios" ? CONFIG.IOS_URL : CONFIG.ANDROID_URL);
+  el.href = url;
+  el.addEventListener("click", e=>{
+    track("store_click", {store: el.dataset.store});
+    e.preventDefault(); flushThen(()=>{ location.href = url; });
+  });
+});
+
+/* ---------- 수입 시뮬레이터 ---------- */
+let days = 3, hours = 4;
+const fmt = n => Math.round(n).toLocaleString("ko-KR") + "원";
+document.getElementById("wageText").textContent = CONFIG.HOURLY_WAGE.toLocaleString("ko-KR") + "원";
+function calc(){
+  const monthHours = days * hours * CONFIG.WEEKS_PER_MONTH;
+  const amt = Math.floor(monthHours * CONFIG.HOURLY_WAGE / 1000) * 1000;
+  document.getElementById("amount").textContent = "약 " + fmt(amt);
+  document.getElementById("meta").textContent = `주 ${days}일 × 하루 ${hours}시간 · 월 약 ${Math.round(monthHours)}시간`;
+}
+function bindSeg(id, setter){
+  const box = document.getElementById(id);
+  box.addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    box.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    setter(+b.dataset.v); calc();
+    track("simulator_change", {days, hours});
+  });
+}
+bindSeg("segDays", v=>days=v);
+bindSeg("segHours", v=>hours=v);
+calc();
+
+/* ---------- 스크롤 애니메이션 & 하단 고정 CTA ---------- */
+const io = new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target);} }),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+const sticky = document.getElementById("stickyCta");
+const heroCta = document.querySelector(".hero-cta");
+const finalSec = document.getElementById("download");
+let heroVisible = true, finalVisible = false;
+const update = ()=> sticky.classList.toggle("show", !heroVisible && !finalVisible);
+new IntersectionObserver(([en])=>{ heroVisible = en.isIntersecting; update(); }).observe(heroCta);
+new IntersectionObserver(([en])=>{ finalVisible = en.isIntersecting; update(); }).observe(finalSec);
+
+track("landing_view", {utm_source: qs.get("utm_source")||"direct"});
+</script>
+</body>
+</html>
